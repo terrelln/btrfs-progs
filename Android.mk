@@ -7,12 +7,12 @@ CFLAGS := -g -O1 -Wall -D_FORTIFY_SOURCE=2 -include config.h \
 
 LDFLAGS := -static -rdynamic
 
-LIBS := -luuid   -lblkid   -lz   -llzo2 -L. -lpthread
+LIBS := -luuid   -lblkid   -lz   -llzo2 -lzstd -L. -lpthread
 LIBBTRFS_LIBS := $(LIBS)
 
 STATIC_CFLAGS := $(CFLAGS) -ffunction-sections -fdata-sections
 STATIC_LDFLAGS := -static -Wl,--gc-sections
-STATIC_LIBS := -luuid   -lblkid -luuid -lz   -llzo2 -L. -pthread
+STATIC_LIBS := -luuid   -lblkid -luuid -lz   -llzo2 -lzstd  -L. -pthread
 
 btrfs_shared_libraries := libext2_uuid \
 			libext2_blkid
@@ -43,7 +43,7 @@ blkid_objects := partition/ superblocks/ topology/
 
 
 # external/e2fsprogs/lib is needed for uuid/uuid.h
-common_C_INCLUDES := $(LOCAL_PATH) external/e2fsprogs/lib/ external/lzo/include/ external/zlib/
+common_C_INCLUDES := $(LOCAL_PATH) external/e2fsprogs/lib/ external/lzo/include/ external/zlib/ external/zstd/lib/
 
 #----------------------------------------------------------
 include $(CLEAR_VARS)
@@ -68,7 +68,7 @@ LOCAL_CFLAGS := $(STATIC_CFLAGS)
 #LOCAL_LDLIBS := $(LIBBTRFS_LIBS)
 #LOCAL_LDFLAGS := $(STATIC_LDFLAGS)
 LOCAL_SHARED_LIBRARIES := $(btrfs_shared_libraries)
-LOCAL_STATIC_LIBRARIES := libbtrfs liblzo-static libz
+LOCAL_STATIC_LIBRARIES := libbtrfs liblzo-static libz libzstd
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc libcutils
 
 LOCAL_EXPORT_C_INCLUDES := $(common_C_INCLUDES)
@@ -88,7 +88,7 @@ LOCAL_CFLAGS := $(STATIC_CFLAGS)
 #LOCAL_LDLIBS := $(LIBBTRFS_LIBS)
 #LOCAL_LDFLAGS := $(STATIC_LDFLAGS)
 LOCAL_SHARED_LIBRARIES := $(btrfs_shared_libraries)
-LOCAL_STATIC_LIBRARIES := libbtrfs liblzo-static
+LOCAL_STATIC_LIBRARIES := libbtrfs liblzo-static libzstd
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc libcutils
 
 LOCAL_EXPORT_C_INCLUDES := $(common_C_INCLUDES)
@@ -108,7 +108,7 @@ LOCAL_SHARED_LIBRARIES := $(btrfs_shared_libraries)
 #LOCAL_LDLIBS := $(LIBBTRFS_LIBS)
 #LOCAL_LDFLAGS := $(STATIC_LDFLAGS)
 LOCAL_SHARED_LIBRARIES := $(btrfs_shared_libraries)
-LOCAL_STATIC_LIBRARIES := libbtrfs liblzo-static
+LOCAL_STATIC_LIBRARIES := libbtrfs liblzo-static libzstd
 LOCAL_SYSTEM_SHARED_LIBRARIES := libc libcutils
 
 LOCAL_EXPORT_C_INCLUDES := $(common_C_INCLUDES)

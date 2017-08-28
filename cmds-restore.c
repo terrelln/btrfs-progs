@@ -29,6 +29,7 @@
 #include <lzo/lzoconf.h>
 #include <lzo/lzo1x.h>
 #include <zlib.h>
+#include <zstd.h>
 #include <regex.h>
 #include <getopt.h>
 #include <sys/types.h>
@@ -156,6 +157,19 @@ static int decompress_lzo(struct btrfs_root *root, unsigned char *inbuf,
 	return 0;
 }
 
+static int decompress_zstd(char *inbuf, char *outbuf, u64 compress_len,
+			   u64 decompress_len)
+{
+	// TODO: Is decompress_len the exact decompressed size?
+	const size_t ret = ZSTD_decompress(outbuf, decompress_len, inbuf,
+					   compress_len);
+	if (ZSTD_isError(ret)) {
+		error("zstd decompress failed %s\n", ZSTD_getErrorName(ret));
+		return -1;
+	}
+	return 0;
+}
+
 static int decompress(struct btrfs_root *root, char *inbuf, char *outbuf,
 			u64 compress_len, u64 *decompress_len, int compress)
 {
@@ -166,6 +180,9 @@ static int decompress(struct btrfs_root *root, char *inbuf, char *outbuf,
 	case BTRFS_COMPRESS_LZO:
 		return decompress_lzo(root, (unsigned char *)inbuf, outbuf,
 					compress_len, decompress_len);
+	case BTRFS_COMPRESS_ZSTD:
+		return decompress_zstd(inbuf, outbuf, compress_len,
+				       *decompress_len);
 	default:
 		break;
 	}

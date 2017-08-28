@@ -182,6 +182,9 @@ PKG_STATIC(UUID_LIBS_STATIC, [uuid])
 PKG_CHECK_MODULES(ZLIB, [zlib])
 PKG_STATIC(ZLIB_LIBS_STATIC, [zlib])
 
+PKG_CHECK_MODULES(ZSTD, [libzstd])
+PKG_STATIC(ZSTD_LIBS_STATIC, [libzstd])
+
 # udev v190 introduced the btrfs builtin and a udev rule to use it.
 # Our udev rule gives us the friendly dm names but isn't required (or valid)
 # on earlier releases.
@@ -238,4 +241,3 @@ AC_MSG_RESULT([
 
 	Type 'make' to compile.
 ])
-
