@@ -75,7 +75,7 @@ script:
      fi;
      (
       cd tmp-reiser/reiserfsprogs-3.6.27;
-      sudo make install;
+      sudo make install
      )
     "
   - "./autogen.sh && ./configure --disable-documentation && make"
